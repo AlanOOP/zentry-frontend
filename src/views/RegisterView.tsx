@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom"
-import type { RegisterFormData } from "../types/register";
+import type { RegisterFormData } from "@/types/auth";
 import { isAxiosError } from "axios";
-import ErrorMessage from "../components/ErrorMessage";
+import ErrorMessage from "@/components/ErrorMessage";
 import toast from "react-hot-toast";
-import api from "../config/axios";
+import api from "@/config/axios";
 
 
 const RegisterView = () => {

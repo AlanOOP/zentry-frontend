@@ -8,3 +8,5 @@ export type User = {
 export type RegisterFormData = Pick<User, "name" | "handle" | "email" | "password"> & {
     repetir_password: string;
 }
+
+export type LoginFormData = Pick<User, "email" | "password">;

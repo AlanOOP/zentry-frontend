@@ -1,10 +1,27 @@
-import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
-
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { authLogin } from "@/services/AuthService";
+import type { LoginFormData } from "@/types/auth";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const LoginView = () => {
 
-    const { handleSubmit, watch, register, formState: { errors } } = useForm();
+    const initialValues: LoginFormData = {
+        email: "",
+        password: ""
+    }
+
+    const { handleSubmit, register, formState: { errors } } = useForm<LoginFormData>({ defaultValues: initialValues });
+
+    const onSubmit = async (formData: LoginFormData) => {
+
+        try {
+            const response = await authLogin(formData);
+            console.log("Login exitoso:", response);
+        } catch (error) {
+            console.error("Error en el login:", error);
+        }
+    }
 
     return (
         <>
@@ -16,13 +33,23 @@ const LoginView = () => {
                         <label htmlFor="" className="block mt-3 text-sm text-gray-700 text-center font-semibold">
                             Login
                         </label>
-                        <form method="#" action="#" className="mt-10">
+                        <form method="#" action="#" className="mt-10" onSubmit={handleSubmit(onSubmit)}>
                             <div>
-                                <input type="email" name="email" placeholder="Correo electronico" className="mt-1 block w-full border-2 border-gray-400 bg-gray-200 p-3 rounded-lg shadow-sm hover:bg-blue-100 focus:bg-blue-100 focus:ring-1 focus:border-none focus:border-indigo-300" />
+                                <input {...register("email", { required: "Este campo es obligatorio" })} type="email" name="email" placeholder="Correo electronico" className="mt-1 block w-full border-2 border-gray-400 bg-gray-200 p-3 rounded-lg shadow-sm hover:bg-blue-100 focus:bg-blue-100 focus:ring-1 focus:border-none focus:border-indigo-300" />
+                                {
+                                    errors.email && <ErrorMessage>
+                                        <p>{errors.email?.message}</p>
+                                    </ErrorMessage>
+                                }
                             </div>
 
                             <div className="mt-7">
-                                <input type="password" name="password" placeholder="Contraseña" className="mt-1 block w-full border-2 border-gray-400 bg-gray-200 p-3 rounded-lg shadow-sm hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 " />
+                                <input {...register("password", { required: "Este campo es obligatorio" })} type="password" name="password" placeholder="Contraseña" className="mt-1 block w-full border-2 border-gray-400 bg-gray-200 p-3 rounded-lg shadow-sm hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 " />
+                                {
+                                    errors.password && <ErrorMessage>
+                                        <p>{errors.password?.message}</p>
+                                    </ErrorMessage>
+                                }
                             </div>
 
                             <div className="mt-7 flex">
@@ -54,15 +81,6 @@ const LoginView = () => {
                                 <hr className="border-gray-300 border-1 w-full rounded-md" />
                             </div>
 
-                            <div className="flex mt-7 justify-center w-full">
-                                <button className="mr-5 bg-blue-500 border-none px-4 py-2 rounded-xl cursor-pointer text-white shadow-xl hover:shadow-inner transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
-                                    Facebook
-                                </button>
-
-                                <button className="bg-red-500 border-none px-4 py-2 rounded-xl cursor-pointer text-white shadow-xl hover:shadow-inner transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
-                                    Google
-                                </button>
-                            </div>
 
                             <div className="mt-7">
                                 <div className="flex justify-center items-center">
