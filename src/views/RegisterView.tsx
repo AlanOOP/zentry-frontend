@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import type { RegisterFormData } from "@/types/auth";
-import { isAxiosError } from "axios";
 import ErrorMessage from "@/components/ErrorMessage";
 import toast from "react-hot-toast";
-import api from "@/config/axios";
+import { useMutation } from "@tanstack/react-query";
+import { authRegister } from "@/services/AuthService";
 
 
 const RegisterView = () => {
@@ -23,29 +23,20 @@ const RegisterView = () => {
 
   const password = watch("password");
 
-  const onSubmit = async (formData: RegisterFormData) => {
-    console.log("Formulario enviado");
-    console.log("Datos del formulario:", formData);
-
-
-    try {
-      const response = await api.post(`/auth/register`, formData);
-      console.log("Respuesta del servidor:", response.data);
-
-      //resetear el formulario
+  const { mutate } = useMutation({
+    mutationFn: authRegister,
+    onSuccess: (data) => {
+      console.log("Registro exitoso:", data);
+      toast.success("Registro exitoso");
       reset();
-    } catch (error: unknown) {
-      if (isAxiosError(error)) {
-        console.error("Error al enviar el formulario:", error.response?.data.error || "Hubo un error al enviar el formulario");
-        toast.error(error.response?.data.error.toString() || "Hubo un error al enviar el formulario");
-      } else {
-        console.error("Error desconocido:", error);
-        toast.error("Hubo un error desconocido al enviar el formulario");
-      }
-
+    },
+    onError: (error) => {
+      toast.error(error.message.toString() ?? "Error desconocido");
     }
+  })
 
-
+  const onSubmit = async (formData: RegisterFormData) => {
+    mutate(formData);
   };
 
   useEffect(() => {

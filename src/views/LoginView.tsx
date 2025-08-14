@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { authLogin } from "@/services/AuthService";
 import type { LoginFormData } from "@/types/auth";
 import ErrorMessage from "@/components/ErrorMessage";
@@ -11,17 +13,33 @@ const LoginView = () => {
         password: ""
     }
 
+    const navigate = useNavigate();
+
     const { handleSubmit, register, formState: { errors } } = useForm<LoginFormData>({ defaultValues: initialValues });
 
-    const onSubmit = async (formData: LoginFormData) => {
+    const { mutate } = useMutation({
+        mutationFn: authLogin,
+        onSuccess: (data) => {
+            console.log("Login exitoso:", data)
+            const token = data?.token;
+            if (token) {
+                localStorage.setItem("token", token);
+            }
 
-        try {
-            const response = await authLogin(formData);
-            console.log("Login exitoso:", response);
-        } catch (error) {
-            console.error("Error en el login:", error);
+            navigate('/admin');
+
+        },
+        onError: (error) => {
+            console.error("Error en el login:", error)
+            toast.error(error.message.toString() ?? "Error desconocido");
         }
+    })
+
+    const onSubmit = async (formData: LoginFormData) => {
+        mutate(formData);
     }
+
+
 
     return (
         <>
