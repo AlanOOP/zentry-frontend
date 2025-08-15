@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 import api from "@/config/axios";
-import type { LoginFormData, RegisterFormData, User } from "@/types/auth";
+import type { LoginFormData, ProfileRequest, RegisterFormData, User } from "@/types/auth";
+import type { UpdateAvatarResponse, UpdateProfileResponse } from "@/types/response";
 
 export const authRegister = async (payload: RegisterFormData) => {
     try {
@@ -31,6 +32,7 @@ export async function authLogin(payload: LoginFormData) {
 }
 
 export async function getUser() {
+    console.log("Fetching user data...");
     try {
         const token = localStorage.getItem("token");
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -46,5 +48,32 @@ export async function getUser() {
             throw new Error("Error desconocido");
         }
     }
+}
 
+export async function updateProfile(payload: ProfileRequest): Promise<UpdateProfileResponse> {
+    try {
+        const response = await api.put<UpdateProfileResponse>("/auth/profile", payload);
+        return response.data;
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response?.data.error.toString() || "Error desconocido");
+        } else {
+            throw new Error("Error desconocido");
+        }
+    }
+}
+
+export async function updateAvatar(file: File): Promise<UpdateAvatarResponse> {
+    try {
+        const formData = new FormData();
+        formData.append("image", file);
+        const response = await api.patch<UpdateAvatarResponse>("/auth/profile/image", formData);
+        return response.data;
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response?.data.error.toString() || "Error desconocido");
+        } else {
+            throw new Error("Error desconocido");
+        }
+    }
 }

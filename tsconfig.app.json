@@ -50,9 +50,16 @@
         ],
         "@/config/*": [
           "config/*"
-        ]
+        ],
+        "@/store/*": [
+          "store/*"
+        ],
+        "@/data/*": [
+          "data/*"
+        ],
+        
       },
   },
 
-  "include": ["src"],
+  "include": ["src", "../server/src/lib"],
 }

@@ -20,7 +20,6 @@ const LoginView = () => {
     const { mutate } = useMutation({
         mutationFn: authLogin,
         onSuccess: (data) => {
-            console.log("Login exitoso:", data)
             const token = data?.token;
             if (token) {
                 localStorage.setItem("token", token);
