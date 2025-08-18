@@ -5,9 +5,10 @@ import { classNames } from "@/utils/utils";
 type DevTreeInputProps = {
     link: DevTreeLink;
     handleLinkChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleEnabledChange: (linkTreeName: string) => void;    
 }
 
-const DevTreeInput = ({ link, handleLinkChange }: DevTreeInputProps) => {
+const DevTreeInput = ({ link, handleLinkChange, handleEnabledChange }: DevTreeInputProps) => {
   return (
     <div className="bg-gradient-to-br from-green-500 to-green-900 shadow-2xl flex items-center p-5 gap-3 rounded-4xl">
         <div 
@@ -24,7 +25,7 @@ const DevTreeInput = ({ link, handleLinkChange }: DevTreeInputProps) => {
         />
         <Switch
                 checked={link.enabled}
-                onChange={e => e}
+                onChange={() => handleEnabledChange(link.name)}
                 className={classNames(
                     link.enabled ? 'bg-blue-500' : 'bg-gray-200',
                     'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'

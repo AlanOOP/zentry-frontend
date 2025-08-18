@@ -11,7 +11,8 @@ const LinkTreeView = () => {
         setDevTreeLinks(devTreeLinks.map(link => link.name === e.target.name ? {...link, url:e.target.value } : link))
     
     const handleEnabledChange = (linkTreeName: string) => {
-        
+        const updateLinks = devTreeLinks.map(link => link.name === linkTreeName ? {...link, enabled: !link.enabled} : link);
+        setDevTreeLinks(updateLinks);
     }
 
     return (
@@ -22,6 +23,7 @@ const LinkTreeView = () => {
                         key={link.name} 
                         link={link}
                         handleLinkChange={handleLinkChange}
+                        handleEnabledChange={handleEnabledChange}
                     />
                 ))} 
             </div>
