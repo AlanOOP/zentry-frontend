@@ -1,5 +1,5 @@
 export type SocialNetwork = {
-    _id: string;
+    id?: string;
     name: string;
     url: string;
     enabled: boolean;

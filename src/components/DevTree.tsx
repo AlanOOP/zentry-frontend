@@ -4,6 +4,9 @@ import logoSvg from '../assets/logo.svg';
 import NavigationTabs from "@/components/NavigationTabs";
 import type { User } from "@/types/auth";
 import { useQueryClient } from "@tanstack/react-query";
+import type { SocialNetwork } from "@/types/social";
+import { useEffect, useState } from "react";
+import DevTreeLink from "./DevTreeLink";
 
 type DevTreeProps = {
     data: User
@@ -14,6 +17,9 @@ const DevTree = ({ data }: DevTreeProps) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
+    // console.log(data.links)
+    const [linkTree, setLinkTree] = useState<SocialNetwork[]>(JSON.parse(data.links!) as SocialNetwork[])
+
     const handleLogout = () => {
         // Implement logout logic here
         localStorage.removeItem('token'); // Assuming you store the token in localStorage
@@ -21,6 +27,10 @@ const DevTree = ({ data }: DevTreeProps) => {
         queryClient.clear();
         navigate('/auth/login');
     }
+
+    useEffect(() =>{
+        setLinkTree(JSON.parse(data.links!) as SocialNetwork[])
+    },[data])
 
   return (
     <>
@@ -62,6 +72,14 @@ const DevTree = ({ data }: DevTreeProps) => {
                                     <img src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${data.avatar}`} alt="Avatar" className="mx-auto max-w-[250px] rounded-lg" />
                             }
                             <p className="text-center text-lg font-bold text-white">{data.description}</p>
+
+                            <div className="mt-20 flex flex-col gap-5">
+                                {
+                                    linkTree.filter(item => item.enabled).
+                                    map( link => ( <DevTreeLink key={link.name} link={link}/>)
+                                    )
+                                }
+                            </div>
                         </div>
                     </div>
                 </main>

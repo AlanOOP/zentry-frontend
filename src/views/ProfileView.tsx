@@ -1,6 +1,6 @@
 import {useForm} from "react-hook-form";
 import { useUserStore } from "@/store/useUserStore"
-import type { ProfileRequest } from "@/types/auth";
+import type { ProfileRequest, User } from "@/types/auth";
 import ErrorMessage from "@/components/ErrorMessage";
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -42,7 +42,10 @@ export default function ProfileView() {
   });
 
   const handleSubmitForm = (data: ProfileRequest) => {
-    updateProfileMutation.mutate(data);
+    const user : User  = queryClient.getQueryData(['user'])!;
+    user.name = data.handle;
+    user.description = data.description;
+    updateProfileMutation.mutate(user);
   }
 
   const handleChangeAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {

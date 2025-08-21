@@ -6,6 +6,7 @@ export type User = {
     password: string;
     description: string;
     avatar?: string;
+    links?: string;
 }
 
 export type RegisterFormData = Pick<User, "name" | "handle" | "email" | "password"> & {

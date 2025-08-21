@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import api from "@/config/axios";
-import type { LoginFormData, ProfileRequest, RegisterFormData, User } from "@/types/auth";
+import type { LoginFormData, RegisterFormData, User } from "@/types/auth";
 import type { UpdateAvatarResponse, UpdateProfileResponse } from "@/types/response";
 
 export const authRegister = async (payload: RegisterFormData) => {
@@ -50,7 +50,7 @@ export async function getUser() {
     }
 }
 
-export async function updateProfile(payload: ProfileRequest): Promise<UpdateProfileResponse> {
+export async function updateProfile(payload: User): Promise<UpdateProfileResponse> {
     try {
         const response = await api.put<UpdateProfileResponse>("/auth/profile", payload);
         return response.data;
